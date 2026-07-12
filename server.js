@@ -1,18 +1,18 @@
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files (React)
-app.use(express.static('public'));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, 'public')));
 
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-
-if (!GITHUB_TOKEN) {
-  console.warn('⚠️ GITHUB_TOKEN not set');
-}
 
 // GitHub API Helper
 async function githubFetch(endpoint, method = 'GET', body) {
@@ -34,7 +34,7 @@ async function githubFetch(endpoint, method = 'GET', body) {
   return response.json();
 }
 
-// API Routes
+// API Route
 app.post('/api/github', async (req, res) => {
   const { action, owner, repo, branch, file_path, content, message } = req.body;
 
@@ -104,13 +104,14 @@ app.post('/api/github', async (req, res) => {
 
     res.status(400).json({ success: false, error: 'Unknown action' });
   } catch (err) {
+    console.error('Error:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// Fallback für React Router
+// Fallback - serve index.html for all other routes (SPA)
 app.get('*', (req, res) => {
-  res.sendFile('public/index.html', { root: '.' });
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 const PORT = process.env.PORT || 3001;
