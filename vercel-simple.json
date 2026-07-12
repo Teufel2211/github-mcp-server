@@ -1,0 +1,12 @@
+{
+  "buildCommand": "npm run build",
+  "framework": "other",
+  "installCommand": "npm install",
+  "env": [
+    {
+      "key": "GITHUB_TOKEN",
+      "description": "GitHub Personal Access Token (ghp_...)",
+      "type": "secret"
+    }
+  ]
+}
