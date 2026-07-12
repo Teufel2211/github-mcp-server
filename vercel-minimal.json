@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "api/**/*.js": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  },
+  "env": {
+    "GITHUB_TOKEN": {
+      "description": "GitHub Personal Access Token",
+      "required": true
+    }
+  }
+}
